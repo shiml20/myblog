@@ -112,7 +112,7 @@ const getPostType = (post: (typeof posts)[number]) =>
 					{
 						posts.map((post) => (
 							<li class="post-item">
-								<a href={toInternalPath(`/blog/${post.id}/`)}>
+								<a href={toInternalPath(`/blog/${post.id}/`)} data-astro-prefetch="viewport">
 									<div class="meta">
 										<span>{getPostType(post)}</span>
 										<span>·</span>

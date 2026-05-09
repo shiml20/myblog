@@ -124,7 +124,16 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
 				}
 			};
 
-			runMermaid();
+			const scheduleMermaid = () => {
+				if (!document.querySelector('pre[data-language="mermaid"] > code')) return;
+				if ('requestIdleCallback' in window) {
+					window.requestIdleCallback(() => runMermaid(), { timeout: 1600 });
+					return;
+				}
+				window.setTimeout(() => runMermaid(), 350);
+			};
+
+			scheduleMermaid();
 		</script>
 	</body>
 </html>

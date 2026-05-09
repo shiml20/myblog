@@ -6,7 +6,7 @@ import HeaderLink from './HeaderLink.astro';
 
 <header>
 	<nav aria-label="主导航">
-		<h2><a href={toInternalPath()}>{SITE_TITLE}</a></h2>
+		<h2><a href={toInternalPath()} data-astro-prefetch="viewport">{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href={toInternalPath()}>首页</HeaderLink>
 			<HeaderLink href={toInternalPath('/blog')}>文章</HeaderLink>

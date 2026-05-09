@@ -493,9 +493,9 @@ const getPostType = (post: (typeof latestPosts)[number]) =>
 						<li>如何在新生产力条件下重新理解个人与组织</li>
 					</ul>
 					<nav class="chips" aria-label="快捷入口">
-						<a href={toInternalPath('/blog')}>读最新文章</a>
-						<a href={toInternalPath('/themes')}>进入思维地图</a>
-						<a href={toInternalPath('/now')}>查看 Now</a>
+						<a href={toInternalPath('/blog')} data-astro-prefetch="viewport">读最新文章</a>
+						<a href={toInternalPath('/themes')} data-astro-prefetch="viewport">进入思维地图</a>
+						<a href={toInternalPath('/now')} data-astro-prefetch="viewport">查看 Now</a>
 					</nav>
 				</div>
 
@@ -529,13 +529,17 @@ const getPostType = (post: (typeof latestPosts)[number]) =>
 								<p class="kicker">Publication Queue</p>
 								<h2 id="latest-heading">最新文章</h2>
 							</div>
-							<a class="more" href={toInternalPath('/blog')}>全部文章 →</a>
+							<a class="more" href={toInternalPath('/blog')} data-astro-prefetch>全部文章 →</a>
 						</div>
 						<p class="section-caption">从最近的思考开始读，带着类型、系列与关键词进入。</p>
 
 						{
 							featuredPost && (
-								<a class="featured-card" href={toInternalPath(`/blog/${featuredPost.id}/`)}>
+								<a
+									class="featured-card"
+									href={toInternalPath(`/blog/${featuredPost.id}/`)}
+									data-astro-prefetch="viewport"
+								>
 									<div class="meta">
 										<span>{getPostType(featuredPost)}</span>
 										<span>·</span>
@@ -559,7 +563,11 @@ const getPostType = (post: (typeof latestPosts)[number]) =>
 							{
 								supportingPosts.map((post) => (
 									<li>
-										<a class="post-link" href={toInternalPath(`/blog/${post.id}/`)}>
+										<a
+											class="post-link"
+											href={toInternalPath(`/blog/${post.id}/`)}
+											data-astro-prefetch="viewport"
+										>
 											<div class="meta">
 												<span>{getPostType(post)}</span>
 												<span>·</span>

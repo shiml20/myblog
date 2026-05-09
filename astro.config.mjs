@@ -12,6 +12,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 export default defineConfig({
 	site: 'https://shiml20.github.io',
 	base: isProduction ? '/myblog' : '/',
+	prefetch: {
+		defaultStrategy: 'hover',
+	},
 	integrations: [mdx(), sitemap()],
 	markdown: {
 		remarkPlugins: [remarkMath],

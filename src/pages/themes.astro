@@ -101,7 +101,9 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 								<ul>
 									{taggedPosts.map((post) => (
 										<li>
-											<a href={toInternalPath(`/blog/${post.id}/`)}>{post.data.title}</a>
+											<a href={toInternalPath(`/blog/${post.id}/`)} data-astro-prefetch>
+												{post.data.title}
+											</a>
 										</li>
 									))}
 								</ul>

@@ -10,7 +10,7 @@ const subpath = pathname.match(/[^\/]+/g);
 const isActive = normalizedHref === pathname || normalizedHref === '/' + (subpath?.[0] || '');
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a href={href} class:list={[className, { active: isActive }]} data-astro-prefetch="viewport" {...props}>
 	<slot />
 </a>
 <style>
