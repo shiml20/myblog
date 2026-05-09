@@ -18,6 +18,14 @@
 	--font-serif-zh:
 		'Source Han Serif SC', 'Noto Serif SC', 'Songti SC', 'STSong',
 		'PMingLiU', serif;
+	/* Homepage / brand display: loaded via BaseHead (Noto Serif SC). */
+	--font-display-zh:
+		'Noto Serif SC', 'Source Han Serif SC', 'Noto Serif CJK SC',
+		'Songti SC', 'STSong', serif;
+	/* Hero English: Latin serif, pairs with Noto Serif SC for CJK */
+	--font-hero-en:
+		'Source Serif 4', 'Noto Serif', 'Iowan Old Style', 'Palatino Linotype',
+		Georgia, 'Times New Roman', serif;
 	--font-sans-zh:
 		'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
 		'Source Han Sans SC', 'Microsoft YaHei', sans-serif;

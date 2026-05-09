@@ -31,6 +31,14 @@ const { title, description, image = FallbackImage } = Astro.props;
 />
 <meta name="generator" content={Astro.generator} />
 
+<!-- Display CJK for homepage hero (Noto Serif SC); swap improves LCP vs blocking CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+	rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;600;700&family=Source+Serif+4:wght@600;700&display=swap"
+/>
+
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 

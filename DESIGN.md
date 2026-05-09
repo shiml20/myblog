@@ -127,11 +127,11 @@ components:
 
 ## 3. Typography
 
-**Display Font:** `PingFang SC` 系列 sans
+**Display Font:** 首页 Hero 中文为 **Noto Serif SC**（`--font-display-zh`，字重 600）；英文为 **Source Serif 4**（`--font-hero-en`）+ 柔和渐变（`background-clip: text`）。其余页面级标题仍为 `PingFang SC` 系列 sans。
 **Body Font:** `Source Han Serif SC` 系列 serif
 **Label/Mono Font:** 导航与标签延续 sans，代码使用 `JetBrains Mono` 回退栈
 
-**Character:** 以中文衬线正文承载论述深度，用无衬线标题与导航提供结构清晰度。
+**Character:** 以中文衬线正文承载论述深度；首页品牌字用衬线大字建立「书写感」，其余 UI 标题与导航仍用 sans 保持结构清晰。
 
 ### One Site-wide Heading Scale
 
@@ -139,7 +139,7 @@ components:
 
 | 角色 | Token | 尺寸 | 字重 | 字体 | 用例 |
 |------|-------|------|------|------|------|
-| 首页品牌标题 | `--text-display` | `clamp(3.5rem, 9vw, 5.75rem)` | 800 | sans | 首页 Hero 的「熵减心流」 |
+| 首页品牌标题 | `--text-display`（中文）+ `0.46em` 英文 | 600 / 600 | 中文 `--font-display-zh`；英文 `--font-hero-en`（Source Serif 4）；渐变 `background-clip: text` | **两行 flex**：`.hero-title-line` + `align-items: last baseline` 对齐中英基线 |
 | 页面 H1 | `--text-h1` | `clamp(2.25rem, 4.2vw, 3.25rem)` | 760 | sans | 每个页面唯一的页面主标题 |
 | 区块 H2 | `--text-h2` | `clamp(1.5rem, 2.4vw, 2rem)` | 720 | sans | 「最新文章」「写作主线」「关于」「Now」「主题索引」分组 |
 | 条目 H3 | `--text-h3` | `1.125rem` | 600 | sans | 文章列表项标题、卡片标题 |
