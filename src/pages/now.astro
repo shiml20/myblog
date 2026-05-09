@@ -1,0 +1,27 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`Now - ${SITE_TITLE}`} description="当前在做什么" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Now</h1>
+			<p>这个页面用于记录我当前在推进的事情，会不定期更新。</p>
+			<ul>
+				<li>优化个人写作工作流：从灵感采集到周更长文发布。</li>
+				<li>持续观察 AI 对知识工作分工方式的影响。</li>
+				<li>打磨“可复用思考模板”，提升表达效率与深度。</li>
+			</ul>
+			<p>更新时间：2026-05-09</p>
+		</main>
+		<Footer />
+	</body>
+</html>

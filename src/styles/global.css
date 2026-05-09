@@ -1,0 +1,169 @@
+@import 'katex/dist/katex.min.css';
+
+:root {
+	--accent: #b04a25;
+	--accent-dark: #813317;
+	--black: 26, 27, 29;
+	--gray: 98, 102, 109;
+	--gray-light: 233, 231, 228;
+	--gray-dark: 47, 50, 54;
+	--paper: #f8f6f2;
+	--box-shadow: 0 10px 30px rgba(40, 30, 10, 0.08);
+	--font-serif-zh:
+		'Source Han Serif SC', 'Noto Serif SC', 'Songti SC', 'STSong',
+		'PMingLiU', serif;
+	--font-sans-zh:
+		'PingFang SC', 'Hiragino Sans GB', 'Noto Sans CJK SC',
+		'Source Han Sans SC', 'Microsoft YaHei', sans-serif;
+	--font-code:
+		'JetBrains Mono', 'SFMono-Regular', Menlo, Monaco, Consolas,
+		'Liberation Mono', monospace;
+}
+body {
+	font-family: var(--font-serif-zh);
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	background: var(--paper);
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	color: rgb(var(--gray-dark));
+	font-size: 20px;
+	line-height: 1.95;
+	font-feature-settings: 'liga' 1, 'kern' 1;
+	text-rendering: optimizeLegibility;
+}
+main {
+	width: 720px;
+	max-width: calc(100% - 2em);
+	margin: auto;
+	padding: 3em 1em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin: 0 0 0.5rem 0;
+	color: rgb(var(--black));
+	line-height: 1.28;
+	letter-spacing: 0.01em;
+	font-family: var(--font-sans-zh);
+	font-weight: 650;
+}
+h1 {
+	font-size: 2.8em;
+}
+h2 {
+	font-size: 2.1em;
+}
+h3 {
+	font-size: 1.6em;
+}
+h4 {
+	font-size: 1.3em;
+}
+h5 {
+	font-size: 1.25em;
+}
+strong,
+b {
+	font-weight: 700;
+}
+a {
+	color: var(--accent);
+	text-underline-offset: 0.2em;
+}
+a:hover {
+	color: var(--accent-dark);
+}
+p {
+	margin-bottom: 1em;
+}
+.prose p {
+	margin-bottom: 1.6em;
+	text-wrap: pretty;
+}
+.prose h2,
+.prose h3 {
+	margin-top: 2.2em;
+}
+textarea {
+	width: 100%;
+	font-size: 16px;
+}
+input {
+	font-size: 16px;
+}
+table {
+	width: 100%;
+}
+img {
+	max-width: 100%;
+	height: auto;
+	border-radius: 8px;
+}
+code {
+	padding: 2px 5px;
+	background-color: rgba(176, 74, 37, 0.08);
+	border-radius: 4px;
+	font-size: 0.88em;
+	font-family: var(--font-code);
+}
+pre {
+	padding: 1.5em;
+	border-radius: 10px;
+	border: 1px solid rgba(176, 74, 37, 0.15);
+	box-shadow: var(--box-shadow);
+}
+pre > code {
+	all: unset;
+	font-family: var(--font-code);
+}
+.mermaid {
+	margin: 2.4em 0;
+	padding: 1.25em;
+	border-radius: 10px;
+	background: #fff;
+	border: 1px solid rgba(176, 74, 37, 0.18);
+	overflow-x: auto;
+}
+blockquote {
+	border-left: 3px solid var(--accent);
+	padding: 0 0 0 20px;
+	margin: 0;
+	font-size: 1.1em;
+	color: rgb(var(--gray-dark));
+}
+hr {
+	border: none;
+	border-top: 1px solid rgb(var(--gray-light));
+}
+@media (max-width: 720px) {
+	body {
+		font-size: 18px;
+		line-height: 1.85;
+	}
+	main {
+		padding: 1em;
+	}
+}
+
+.sr-only {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+	/* IE6, IE7 - a 0 height clip, off to the bottom right of the visible 1px box */
+	clip: rect(1px 1px 1px 1px);
+	/* maybe deprecated but we need to support legacy browsers */
+	clip: rect(1px, 1px, 1px, 1px);
+	/* modern browsers, clip-path works inwards from each corner */
+	clip-path: inset(50%);
+	/* added line to stop words getting smushed together (as they go onto separate lines and some screen readers do not understand line feeds as a space */
+	white-space: nowrap;
+}

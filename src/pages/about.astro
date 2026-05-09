@@ -1,0 +1,27 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`关于 - ${SITE_TITLE}`} description="关于这个站点" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>关于</h1>
+			<p>
+				这个站点主要记录我对 AI 时代个人工作方式变化的观察：哪些方法真正提高了思考质量，哪些只是短期效率幻觉。
+			</p>
+			<p>
+				我会持续写中文长文，形式以可复用观点、结构化论证和实践复盘为主，并尽量提供可执行的思考框架。
+			</p>
+			<p>如果你也在关注类似问题，欢迎通过 GitHub issue 交流。</p>
+		</main>
+		<Footer />
+	</body>
+</html>

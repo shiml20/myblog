@@ -1,0 +1,119 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const latestPosts = (await getCollection('blog'))
+	.filter((post) => !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				margin-top: 1.5rem;
+				padding: 2.2rem;
+				border: 1px solid rgba(176, 74, 37, 0.2);
+				border-radius: 14px;
+				background: #fff;
+				box-shadow: var(--box-shadow);
+			}
+			.hero h1 {
+				margin-bottom: 0.3em;
+			}
+			.hero p {
+				max-width: 40em;
+				margin: 0;
+			}
+			.cta-row {
+				display: flex;
+				gap: 0.8rem;
+				flex-wrap: wrap;
+				margin-top: 1.4rem;
+			}
+			.cta-row a {
+				display: inline-block;
+				padding: 0.45rem 0.9rem;
+				border-radius: 999px;
+				text-decoration: none;
+				border: 1px solid rgba(176, 74, 37, 0.4);
+			}
+			.cta-row a.primary {
+				background: var(--accent);
+				border-color: var(--accent);
+				color: #fff;
+			}
+			.grid {
+				margin-top: 1.8rem;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 1rem;
+			}
+			.panel {
+				background: #fff;
+				border-radius: 12px;
+				border: 1px solid rgba(176, 74, 37, 0.16);
+				padding: 1rem 1.1rem;
+			}
+			.panel h2 {
+				font-size: 1.2rem;
+			}
+			.panel ul {
+				padding-left: 1rem;
+				margin: 0.6rem 0 0;
+			}
+			.panel li {
+				margin: 0.3rem 0;
+			}
+			@media (max-width: 760px) {
+				.grid {
+					grid-template-columns: 1fr;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero">
+				<h1>思维生产线</h1>
+				<p>
+					这是一个中文长文优先的个人实验博客，用来持续沉淀我对 AI 时代个人工作流、生产力以及生产关系演化的观察与判断。
+				</p>
+				<div class="cta-row">
+					<a class="primary" href="/blog/style-showcase/">查看风格展示</a>
+					<a href="/blog/">浏览全部文章</a>
+				</div>
+			</section>
+			<section class="grid">
+				<section class="panel">
+					<h2>最新文章</h2>
+					<ul>
+						{
+							latestPosts.map((post) => (
+								<li>
+									<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+								</li>
+							))
+						}
+					</ul>
+				</section>
+				<section class="panel">
+					<h2>写作主线</h2>
+					<ul>
+						<li>AI 时代个人工作流设计</li>
+						<li>生产力工具的长期复利效应</li>
+						<li>个体与组织生产关系变化</li>
+					</ul>
+				</section>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

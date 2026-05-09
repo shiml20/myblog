@@ -1,0 +1,82 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+
+const posts = (await getCollection('blog'))
+	.filter((post) => !post.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const tagMap = new Map();
+for (const post of posts) {
+	for (const tag of post.data.tags) {
+		const list = tagMap.get(tag) ?? [];
+		list.push(post);
+		tagMap.set(tag, list);
+	}
+}
+
+const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`主题 - ${SITE_TITLE}`} description="按主题聚合内容" />
+		<style>
+			main {
+				width: 860px;
+			}
+			.group {
+				background: #fff;
+				border: 1px solid rgba(176, 74, 37, 0.2);
+				border-radius: 12px;
+				padding: 1rem 1.2rem;
+				margin-bottom: 1rem;
+			}
+			.group h2 {
+				margin-bottom: 0.4rem;
+			}
+			.group ul {
+				margin: 0;
+				padding-left: 1.1rem;
+			}
+			.group li {
+				margin: 0.35rem 0;
+			}
+			.count {
+				color: rgb(var(--gray));
+				font-size: 0.85em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>主题索引</h1>
+			<p>把长文按主题组织，方便未来持续迭代同一条思考线。</p>
+			{
+				tags.length === 0 ? (
+					<p>目前还没有标签，先在文章 frontmatter 里添加 tags 字段即可。</p>
+				) : (
+					tags.map(([tag, taggedPosts]) => (
+						<section class="group">
+							<h2>#{tag}</h2>
+							<p class="count">{taggedPosts.length} 篇</p>
+							<ul>
+								{taggedPosts.map((post) => (
+									<li>
+										<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+									</li>
+								))}
+							</ul>
+						</section>
+					))
+				)
+			}
+		</main>
+		<Footer />
+	</body>
+</html>
