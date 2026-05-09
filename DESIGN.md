@@ -1,5 +1,5 @@
 ---
-name: 思维生产线
+name: 熵减心流
 description: 中文长文写作与方法论沉淀博客
 colors:
   accent: "#A14A2A"
@@ -93,11 +93,11 @@ components:
     padding: "0.2rem 0.6rem"
 ---
 
-# Design System: 思维生产线
+# Design System: 熵减心流
 
 ## 1. Overview
 
-**Creative North Star: "思想生产线的操作系统"**
+**Creative North Star: "熵减心流：个人知识工作的操作系统"**
 
 这个站点的视觉目标不是普通博客模板，而是一个长期思想工程的入口。读者打开页面后，第一感受应是：这里在持续研究 AI 时代的个人工作流、认知结构与生产关系，并且有一套稳定的输入、思考、输出、反馈系统。
 
@@ -139,7 +139,7 @@ components:
 
 | 角色 | Token | 尺寸 | 字重 | 字体 | 用例 |
 |------|-------|------|------|------|------|
-| 首页品牌标题 | `--text-display` | `clamp(3.5rem, 9vw, 5.75rem)` | 800 | sans | 首页 Hero 的「思维生产线」 |
+| 首页品牌标题 | `--text-display` | `clamp(3.5rem, 9vw, 5.75rem)` | 800 | sans | 首页 Hero 的「熵减心流」 |
 | 页面 H1 | `--text-h1` | `clamp(2.25rem, 4.2vw, 3.25rem)` | 760 | sans | 每个页面唯一的页面主标题 |
 | 区块 H2 | `--text-h2` | `clamp(1.5rem, 2.4vw, 2rem)` | 720 | sans | 「最新文章」「写作主线」「关于」「Now」「主题索引」分组 |
 | 条目 H3 | `--text-h3` | `1.125rem` | 600 | sans | 文章列表项标题、卡片标题 |

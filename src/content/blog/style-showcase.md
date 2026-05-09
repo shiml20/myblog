@@ -11,9 +11,9 @@ series: 站点搭建
 
 这是一个用于预览风格的示例页面。目标不是讲完整观点，而是验证三件事：
 
-1. 中文长段落是否耐读  
-2. 数学公式是否清晰  
-3. Mermaid 结构图是否可以自然融入文字叙事  
+1. 中文长段落是否耐读
+2. 数学公式是否清晰
+3. Mermaid 结构图是否可以自然融入文字叙事
 
 ## 1) 中文正文排版
 
@@ -32,14 +32,14 @@ $$
 
 其中：
 
-- \( C \)：清晰度（Clarity）
-- \( F \)：专注度（Focus）
-- \( R \)：复利率（Rate of Iteration）
+- C ：清晰度（Clarity）
+- F ：专注度（Focus）
+- R ：复利率（Rate of Iteration）
 
 再引入时间维度后，长期质量可以写成：
 
 $$
-Q(t) = Q_0 + \int_0^t \alpha \cdot P_{effective}(\tau) \, d\tau
+Q(t) = Q_0 + \int_0^t \alpha \cdot P_{effective}(\tau)  d\tau
 $$
 
 这个模型很粗糙，但足够作为文章中的“讨论锚点”。
@@ -53,6 +53,8 @@ flowchart TD
   draft --> publish[发布反馈]
   publish --> capture
 ```
+
+
 
 当图示规模较小、语义明确时，它比配图更轻，也更适合技术与方法论文章。
 

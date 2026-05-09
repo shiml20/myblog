@@ -1,13 +1,15 @@
 ---
-title: ''
+
+## title: ''
+
 description: ''
 pubDate: 'May 09 2026'
 updatedDate:
 tags:
-  - AI工作流
+
+- AI工作流
 series:
 draft: true
----
 
 ## 问题定义
 
@@ -29,5 +31,5 @@ draft: true
 
 ## 可执行清单
 
-- [ ] 下一步动作 1
-- [ ] 下一步动作 2
+- 下一步动作 1
+- 下一步动作 2
