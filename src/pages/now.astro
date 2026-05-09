@@ -3,6 +3,21 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_TITLE } from '../consts';
+
+const nowGroups = [
+	{
+		title: '正在研究',
+		items: ['Agentic Workflow 如何进入日常知识工作', '输入、判断、表达、反馈之间的闭环结构'],
+	},
+	{
+		title: '正在写',
+		items: ['AI 时代的输入系统', '把可复用思考模板转化成长期写作节奏'],
+	},
+	{
+		title: '长期主题',
+		items: ['生产关系', '工具复利', '个人操作系统'],
+	},
+];
 ---
 
 <!doctype html>
@@ -10,23 +25,57 @@ import { SITE_TITLE } from '../consts';
 	<head>
 		<BaseHead title={`Now - ${SITE_TITLE}`} description="当前在做什么" />
 		<style>
-			.now-shell {
-				background: #fff;
-				border: 1px solid rgba(176, 74, 37, 0.18);
-				border-radius: 12px;
-				padding: 1.2rem 1.3rem;
-				box-shadow: var(--box-shadow);
+			.lead {
+				margin: 0.4rem 0 1.2rem;
+				font-family: var(--font-serif-zh);
+				font-size: clamp(1rem, 1.6vw, 1.15rem);
+				line-height: 1.9;
+				color: rgb(var(--gray-dark));
+			}
+			.now-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 1rem;
+				margin-top: var(--section-gap);
+			}
+			.now-card {
+				padding: 1.1rem;
+				border: 1px solid var(--hairline);
+				border-radius: 20px;
+				background: rgba(255, 250, 246, 0.74);
+				box-shadow: 0 12px 30px rgba(79, 43, 24, 0.05);
+			}
+			.now-card h2 {
+				margin: 0 0 0.65rem;
 			}
 			.now-list {
-				padding-left: 1.1rem;
-				margin: 0.75rem 0 1rem;
+				padding-left: 0;
+				margin: 0;
+				list-style: none;
 			}
 			.now-list li {
-				margin: 0.36rem 0;
+				position: relative;
+				margin: 0.45rem 0;
+				padding-left: 0.9rem;
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-excerpt);
+				line-height: 1.75;
+			}
+			.now-list li::before {
+				content: '';
+				position: absolute;
+				top: 0.82em;
+				left: 0;
+				width: 0.34rem;
+				height: 0.34rem;
+				border-radius: 999px;
+				background: var(--accent-warm);
 			}
 			.updated {
-				font-size: 0.86rem;
+				margin-top: var(--section-gap);
+				font-size: var(--text-meta);
 				color: rgb(var(--gray));
+				font-family: var(--font-sans-zh);
 			}
 		</style>
 	</head>
@@ -34,15 +83,22 @@ import { SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<h1>Now</h1>
-			<section class="now-shell">
-				<p>这个页面用于记录我当前在推进的事情，会不定期更新。</p>
-				<ul class="now-list">
-					<li>优化个人写作工作流，从灵感采集到周更长文发布。</li>
-					<li>持续观察 AI 对知识工作分工方式的影响。</li>
-					<li>打磨“可复用思考模板”，提升表达效率与深度。</li>
-				</ul>
-				<p class="updated">更新时间：2026-05-09</p>
-			</section>
+			<p class="lead">
+				这个页面记录当前在推进的研究、写作与长期主题。它不是待办清单，而是站点的工作状态快照。
+			</p>
+			<div class="now-grid">
+				{
+					nowGroups.map((group) => (
+						<section class="now-card">
+							<h2>{group.title}</h2>
+							<ul class="now-list">
+								{group.items.map((item) => <li>{item}</li>)}
+							</ul>
+						</section>
+					))
+				}
+			</div>
+			<p class="updated">更新时间：2026-05-09</p>
 		</main>
 		<Footer />
 	</body>

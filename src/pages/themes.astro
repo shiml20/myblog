@@ -26,44 +26,61 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 	<head>
 		<BaseHead title={`主题 - ${SITE_TITLE}`} description="按主题聚合内容" />
 		<style>
-			main {
-				width: 860px;
+			.intro {
+				margin: 0.4rem 0 var(--section-gap);
+				color: rgb(var(--gray-dark));
+				font-family: var(--font-serif-zh);
+				font-size: clamp(1rem, 1.6vw, 1.15rem);
+				line-height: 1.85;
+			}
+			.groups {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+				gap: 1rem;
 			}
 			.group {
-				background: #fff;
-				border: 1px solid rgba(176, 74, 37, 0.2);
-				border-radius: 12px;
-				padding: 1rem 1.2rem;
-				margin-bottom: 1rem;
+				padding: 1.15rem;
+				border: 1px solid var(--hairline);
+				border-radius: 20px;
+				background: rgba(255, 250, 246, 0.72);
+				box-shadow: 0 12px 30px rgba(79, 43, 24, 0.05);
 			}
 			.group h2 {
-				margin-bottom: 0.4rem;
+				margin: 0;
+			}
+			.group .count {
+				margin: 0.2rem 0 0.8rem;
+				color: rgb(var(--gray));
+				font-size: var(--text-meta);
+				font-family: var(--font-sans-zh);
+				font-weight: 700;
 			}
 			.group ul {
+				list-style: none;
 				margin: 0;
-				padding-left: 1.1rem;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 0.55rem;
 			}
-			.group li {
-				margin: 0.35rem 0;
-			}
-			.group a {
+			.group li a {
+				font-family: var(--font-sans-zh);
+				font-size: 1rem;
+				font-weight: var(--weight-item-title);
+				color: rgb(var(--black));
 				text-decoration: none;
+				text-decoration-color: transparent;
+				transition: color 220ms var(--ease-out), text-decoration-color 220ms var(--ease-out);
 			}
-			.group a:hover {
+			.group li a:hover {
+				color: var(--accent-dark);
 				text-decoration: underline;
-				text-underline-offset: 0.2em;
+				text-decoration-color: rgba(161, 74, 42, 0.4);
 			}
-			.count {
-				color: rgb(var(--gray));
-				font-size: 0.85em;
-			}
-			@media (max-width: 760px) {
-				main {
-					width: 100%;
-				}
-				.group {
-					padding: 0.92rem 1rem;
-				}
+			.empty {
+				color: rgb(var(--gray-dark));
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-body);
 			}
 		</style>
 	</head>
@@ -71,24 +88,26 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 		<Header />
 		<main>
 			<h1>主题索引</h1>
-			<p>把长文按主题组织，方便未来持续迭代同一条思考线。</p>
+			<p class="intro">把长文按主题组织，方便未来持续迭代同一条思考线。</p>
 			{
 				tags.length === 0 ? (
-					<p>目前还没有标签，先在文章 frontmatter 里添加 tags 字段即可。</p>
+					<p class="empty">目前还没有标签，先在文章 frontmatter 里添加 tags 字段即可。</p>
 				) : (
-					tags.map(([tag, taggedPosts]) => (
-						<section class="group">
-							<h2>#{tag}</h2>
-							<p class="count">{taggedPosts.length} 篇</p>
-							<ul>
-								{taggedPosts.map((post) => (
-									<li>
-										<a href={toInternalPath(`/blog/${post.id}/`)}>{post.data.title}</a>
-									</li>
-								))}
-							</ul>
-						</section>
-					))
+					<div class="groups">
+						{tags.map(([tag, taggedPosts]) => (
+							<section class="group">
+								<h2>#{tag}</h2>
+								<p class="count">{taggedPosts.length} 篇</p>
+								<ul>
+									{taggedPosts.map((post) => (
+										<li>
+											<a href={toInternalPath(`/blog/${post.id}/`)}>{post.data.title}</a>
+										</li>
+									))}
+								</ul>
+							</section>
+						))}
+					</div>
 				)
 			}
 		</main>

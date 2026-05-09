@@ -9,6 +9,12 @@ import { SITE_DESCRIPTION, SITE_TITLE, toInternalPath } from '../../consts';
 const posts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const estimateReadingMinutes = (body: string) =>
+	Math.max(4, Math.ceil(body.replace(/\s+/g, '').length / 450));
+
+const getPostType = (post: (typeof posts)[number]) =>
+	post.data.tags[0] ?? post.data.series ?? 'Essay';
 ---
 
 <!doctype html>
@@ -16,84 +22,83 @@ const posts = (await getCollection('blog'))
 	<head>
 		<BaseHead title={`文章 - ${SITE_TITLE}`} description={SITE_DESCRIPTION} />
 		<style>
-			main {
-				width: 860px;
-			}
-			h1 {
-				margin-bottom: 0.35em;
-			}
 			.intro {
-				margin-bottom: 2rem;
+				margin: 0.4rem 0 0.4rem;
+				color: rgb(var(--gray-dark));
+				font-family: var(--font-serif-zh);
+				font-size: clamp(1rem, 1.6vw, 1.15rem);
+				line-height: 1.85;
+			}
+			.count {
 				color: rgb(var(--gray));
-				font-size: 1rem;
+				font-size: var(--text-meta);
+				font-family: var(--font-sans-zh);
+				margin: 0 0 var(--section-gap);
 			}
 			.post-list {
 				display: flex;
 				flex-direction: column;
-				gap: 1.1rem;
-			}
-			.post-item {
-				padding: 1.2rem 1.3rem;
-				border: 1px solid rgba(176, 74, 37, 0.2);
-				border-radius: 12px;
-				background: #fff;
+				gap: 0.85rem;
+				list-style: none;
+				padding: 0;
+				margin: 0;
 			}
 			.post-item a {
 				text-decoration: none;
 				color: inherit;
 				display: block;
+				padding: 1.05rem 1.1rem;
+				border-radius: 18px;
+				border: 1px solid var(--hairline);
+				background: rgba(255, 250, 246, 0.7);
+				box-shadow: 0 12px 28px rgba(79, 43, 24, 0.05);
+				transition: transform 240ms var(--ease-out), box-shadow 240ms var(--ease-out), border-color 240ms var(--ease-out);
 			}
-			.post-item:hover {
-				box-shadow: var(--box-shadow);
-				transform: translateY(-1px);
-				transition: box-shadow 220ms var(--ease-out), transform 220ms var(--ease-out);
+			.post-item a:hover {
+				transform: translateY(-3px);
+				border-color: rgba(161, 74, 42, 0.34);
+				box-shadow: 0 18px 40px rgba(79, 43, 24, 0.1);
+			}
+			.post-item h3 {
+				margin: 0.25rem 0 0;
+				color: rgb(var(--black));
+				transition: color 220ms var(--ease-out);
+			}
+			.post-item a:hover h3 {
+				color: var(--accent-dark);
 			}
 			.meta {
 				display: flex;
-				gap: 0.7rem;
+				flex-wrap: wrap;
+				gap: 0.4rem;
 				align-items: center;
-				font-size: 0.75rem;
+				font-size: var(--text-meta);
 				color: rgb(var(--gray));
-				margin-bottom: 0.3rem;
-			}
-			.title {
-				font-size: 1.5rem;
-				line-height: 1.35;
-				margin-bottom: 0.28rem;
+				font-family: var(--font-sans-zh);
+				font-weight: 650;
+				line-height: 1.4;
 			}
 			.desc {
-				margin: 0;
+				margin: 0.4rem 0 0;
 				color: rgb(var(--gray-dark));
-				font-size: 1rem;
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-excerpt);
 				line-height: 1.65;
 			}
 			.tags {
-				margin-top: 0.8rem;
+				margin-top: 0.55rem;
 				display: flex;
 				flex-wrap: wrap;
 				gap: 0.4rem;
 			}
 			.tag {
-				font-size: 0.75rem;
-				padding: 0.12rem 0.5rem;
+				font-size: var(--text-meta);
+				font-family: var(--font-sans-zh);
+				padding: 0.1rem 0.5rem;
 				border-radius: 999px;
-				border: 1px solid rgba(176, 74, 37, 0.35);
+				border: 1px solid rgba(161, 74, 42, 0.28);
 				color: var(--accent-dark);
-			}
-			.count {
-				color: rgb(var(--gray));
-				font-size: 1rem;
-			}
-			@media (max-width: 760px) {
-				main {
-					width: 100%;
-				}
-				.post-item {
-					padding: 1rem;
-				}
-				.title {
-					font-size: 1.25rem;
-				}
+				background: rgba(243, 232, 226, 0.48);
 			}
 		</style>
 	</head>
@@ -103,16 +108,20 @@ const posts = (await getCollection('blog'))
 			<h1>文章</h1>
 			<p class="intro">围绕 AI 时代工作流、生产力与生产关系变化的持续写作。</p>
 			<p class="count">共 {posts.length} 篇</p>
-			<section class="post-list">
+			<ul class="post-list">
 					{
 						posts.map((post) => (
-							<article class="post-item">
+							<li class="post-item">
 								<a href={toInternalPath(`/blog/${post.id}/`)}>
 									<div class="meta">
+										<span>{getPostType(post)}</span>
+										<span>·</span>
+										<span>{estimateReadingMinutes(post.body)} min</span>
+										<span>·</span>
 										<FormattedDate date={post.data.pubDate} />
 										{post.data.series && <span>· {post.data.series}</span>}
 									</div>
-									<h3 class="title">{post.data.title}</h3>
+									<h3>{post.data.title}</h3>
 									<p class="desc">{post.data.description}</p>
 									{
 										post.data.tags.length > 0 && (
@@ -124,10 +133,10 @@ const posts = (await getCollection('blog'))
 										)
 									}
 								</a>
-							</article>
+							</li>
 						))
 					}
-			</section>
+			</ul>
 		</main>
 		<Footer />
 	</body>

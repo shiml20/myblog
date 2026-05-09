@@ -6,10 +6,45 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_MAIN_URL, SITE_TITLE, toInternalPath } from '../consts';
 
-const latestPosts = (await getCollection('blog'))
+const allPosts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const latestPosts = allPosts.slice(0, 5);
+const featuredPost = latestPosts[0];
+const supportingPosts = latestPosts.slice(1);
+
+const tracks = [
+	{
+		label: '工作流设计',
+		desc: 'AI 时代个人如何配置输入、思考与输出。',
+		nodes: ['输入系统', 'AI 协同', '输出自动化'],
+	},
+	{
+		label: '工具复利',
+		desc: '工具链如何在长期中改变质量，而不是只提速。',
+		nodes: ['知识沉淀', '自动化', 'Agent'],
+	},
+	{
+		label: '生产关系',
+		desc: '个体与组织在新生产力条件下的协作重构。',
+		nodes: ['个人杠杆', '组织边界', '协作协议'],
+	},
+];
+
+const loopSteps = ['输入', '思考', '结构化', '输出', '反馈', '沉淀'];
+const keywords = ['Agentic Workflow', '认知结构', '长期复利工具', '中文长文', '生产系统'];
+const nowItems = [
+	'在研究：Agentic Workflow 如何进入日常知识工作',
+	'正在写：AI 时代的输入系统与表达系统',
+	'长期主题：生产关系 / 工具复利 / 个人操作系统',
+];
+
+const estimateReadingMinutes = (body: string) =>
+	Math.max(4, Math.ceil(body.replace(/\s+/g, '').length / 450));
+
+const getPostType = (post: (typeof latestPosts)[number]) =>
+	post.data.tags[0] ?? post.data.series ?? 'Essay';
 ---
 
 <!doctype html>
@@ -17,244 +52,573 @@ const latestPosts = (await getCollection('blog'))
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			.home-shell {
-				margin-top: 1.2rem;
-				border: 1px solid rgba(176, 74, 37, 0.2);
-				border-radius: 16px;
-				background: #fff;
-				box-shadow: var(--box-shadow);
-				overflow: hidden;
+			.home-main {
+				width: min(var(--home-width), calc(100% - 2rem));
+				max-width: none;
+				padding: clamp(2rem, 5vw, 4.6rem) 0 4.5rem;
 			}
-			.hero {
+			.hero-lab {
+				position: relative;
 				display: grid;
-				grid-template-columns: 1.2fr 0.8fr;
-				gap: 1.4rem;
-				padding: 2rem 2rem 1.5rem;
-				border-bottom: 1px solid rgba(176, 74, 37, 0.15);
+				grid-template-columns: minmax(0, 7fr) minmax(280px, 5fr);
+				gap: clamp(2rem, 4.5vw, 4.5rem);
+				align-items: stretch;
+				min-height: 520px;
 			}
-			.kicker {
+			.hero-lab::before {
+				content: '';
+				position: absolute;
+				inset: -1.2rem -1.4rem auto auto;
+				width: 34%;
+				height: 48%;
+				background: radial-gradient(circle, rgba(200, 106, 61, 0.18), transparent 68%);
+				pointer-events: none;
+			}
+			.eyebrow,
+			.kicker,
+			.meta,
+			.more,
+			.card-label,
+			.system-step,
+			.tag,
+			.note {
 				font-family: var(--font-sans-zh);
-				font-size: 0.74rem;
+			}
+			.eyebrow {
+				margin: 0 0 1.1rem;
+				color: var(--accent-dark);
+				font-size: var(--text-meta);
+				font-weight: 700;
+				letter-spacing: 0.16em;
 				text-transform: uppercase;
-				letter-spacing: 0.18em;
-				color: var(--accent-dark);
-				margin-bottom: 0.8rem;
 			}
-			.hero h1 {
-				font-size: clamp(2rem, 5vw, 3.2rem);
-				line-height: 1.1;
-				margin: 0 0 0.5rem;
-			}
-			.hero-copy {
-				font-family: var(--font-serif-zh);
-			}
-			.hero-copy p {
+			.hero-title {
 				margin: 0;
-				max-width: 34em;
+				font-size: var(--text-display);
+				font-weight: 800;
+				line-height: 0.98;
+				letter-spacing: -0.08em;
 			}
-			.hero-meta {
-				margin-top: 1.1rem;
-				font-size: 0.82rem;
-				color: rgb(var(--gray));
-			}
-			.quick-jump {
-				margin-top: 1rem;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.55rem;
-			}
-			.quick-jump a {
-				font-family: var(--font-sans-zh);
-				font-size: 0.8rem;
-				text-decoration: none;
-				color: var(--accent-dark);
-				padding: 0.18rem 0.56rem;
-				border-radius: 999px;
-				border: 1px solid rgba(176, 74, 37, 0.25);
-				background: rgba(176, 74, 37, 0.06);
-			}
-			.quick-jump a:hover {
-				background: rgba(176, 74, 37, 0.14);
-			}
-			.entry-card {
-				align-self: end;
-				background: rgba(176, 74, 37, 0.04);
-				border: 1px solid rgba(176, 74, 37, 0.22);
-				border-radius: 12px;
-				padding: 1rem 1rem 0.95rem;
-			}
-			.entry-card h2 {
-				font-size: 0.95rem;
-				margin-bottom: 0.25rem;
-			}
-			.entry-card p {
-				margin: 0;
-				font-size: 0.88rem;
-				line-height: 1.6;
-			}
-			.entry-card a {
-				font-family: var(--font-sans-zh);
-				font-size: 0.82rem;
-				text-decoration: none;
-				display: inline-block;
-				margin-top: 0.55rem;
-			}
-			.entry-card a:hover {
-				color: var(--accent-dark);
-			}
-			.sections {
-				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 0;
-			}
-			.latest-grid {
-				display: grid;
-				grid-template-columns: 1fr;
-				gap: 0.9rem;
-				margin-top: 0.7rem;
-			}
-			.latest-item {
-				border: 1px solid rgba(176, 74, 37, 0.16);
-				border-radius: 10px;
-				padding: 0.8rem 0.9rem;
-				background: rgba(248, 246, 242, 0.6);
-			}
-			.latest-item a {
-				text-decoration: none;
-				color: inherit;
+			.hero-title span {
 				display: block;
 			}
-			.latest-item:hover {
-				background: rgba(176, 74, 37, 0.06);
-				transition: background-color 220ms var(--ease-out);
-			}
-			.latest-title {
-				font-size: 1.15rem;
-				font-family: var(--font-sans-zh);
-				line-height: 1.35;
-				margin: 0.2rem 0 0.08rem;
-			}
-			.latest-desc {
-				font-size: 0.9rem;
+			.lead {
+				margin: 1.45rem 0 0;
+				max-width: 33em;
+				font-size: clamp(1.05rem, 1.7vw, 1.25rem);
+				line-height: 1.9;
 				color: rgb(var(--gray-dark));
-				line-height: 1.55;
-				margin: 0.28rem 0 0;
-				display: -webkit-box;
-				-webkit-line-clamp: 2;
-				-webkit-box-orient: vertical;
-				overflow: hidden;
 			}
-			.latest-meta {
-				font-size: 0.78rem;
-				color: rgb(var(--gray));
+			.hero-points {
+				list-style: none;
+				padding: 0;
+				margin: 1.5rem 0 0;
+				display: grid;
+				gap: 0.55rem;
+				color: rgb(var(--black));
+				font-size: var(--text-excerpt);
+			}
+			.hero-points li {
+				position: relative;
+				padding-left: 1rem;
+			}
+			.hero-points li::before {
+				content: '';
+				position: absolute;
+				top: 0.82em;
+				left: 0;
+				width: 0.38rem;
+				height: 0.38rem;
+				border-radius: 999px;
+				background: var(--accent-warm);
+			}
+			.chips {
+				margin-top: 1.6rem;
 				display: flex;
+				flex-wrap: wrap;
+				gap: 0.6rem;
+			}
+			.chips a {
+				font-family: var(--font-sans-zh);
+				font-size: var(--text-meta);
+				font-weight: 700;
+				text-decoration: none;
+				color: var(--accent-dark);
+				padding: 0.46rem 0.86rem;
+				border-radius: 999px;
+				border: 1px solid rgba(161, 74, 42, 0.26);
+				background: rgba(255, 250, 246, 0.68);
+				box-shadow: 0 10px 26px rgba(79, 43, 24, 0.06);
+			}
+			.chips a:hover {
+				background: var(--accent-wash);
+				transform: translateY(-1px);
+			}
+			.hero-visual {
+				position: relative;
+				border: 1px solid rgba(161, 74, 42, 0.18);
+				border-radius: 28px;
+				background:
+					linear-gradient(135deg, rgba(255, 250, 246, 0.94), rgba(243, 232, 226, 0.7)),
+					radial-gradient(circle at 20% 10%, rgba(200, 106, 61, 0.18), transparent 18rem);
+				box-shadow: var(--box-shadow);
+				overflow: hidden;
+				padding: clamp(1.2rem, 2.5vw, 2rem);
+			}
+			.hero-visual::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				background-image:
+					linear-gradient(rgba(161, 74, 42, 0.08) 1px, transparent 1px),
+					linear-gradient(90deg, rgba(161, 74, 42, 0.08) 1px, transparent 1px);
+				background-size: 28px 28px;
+				mask-image: linear-gradient(to bottom, black, transparent 82%);
+				pointer-events: none;
+			}
+			.visual-inner {
+				position: relative;
+				z-index: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 1.2rem;
+				height: 100%;
+			}
+			.terminal-line {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 1rem;
+				font-family: var(--font-code);
+				font-size: 0.78rem;
+				color: var(--accent-dark);
+				border-bottom: 1px solid rgba(161, 74, 42, 0.14);
+				padding-bottom: 0.8rem;
+			}
+			.cursor {
+				display: inline-block;
+				width: 0.55em;
+				height: 1.1em;
+				background: var(--accent-warm);
+				animation: blink 1.2s steps(2, start) infinite;
+			}
+			.system-loop {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 0.78rem;
+			}
+			.system-step {
+				position: relative;
+				padding: 0.9rem 0.9rem 0.85rem;
+				border-radius: 16px;
+				border: 1px solid rgba(161, 74, 42, 0.16);
+				background: rgba(255, 250, 246, 0.72);
+				color: rgb(var(--black));
+				font-size: 0.92rem;
+				font-weight: 700;
+				transition: transform 260ms var(--ease-out), border-color 260ms var(--ease-out);
+			}
+			.system-step::after {
+				content: attr(data-index);
+				display: block;
+				margin-top: 0.35rem;
+				color: rgba(126, 53, 31, 0.58);
+				font-family: var(--font-code);
+				font-size: 0.7rem;
+			}
+			.system-step:hover {
+				border-color: rgba(161, 74, 42, 0.34);
+				transform: translateY(-3px);
+			}
+			.keywords {
+				margin-top: auto;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+			.tag {
+				border: 1px solid rgba(161, 74, 42, 0.2);
+				border-radius: 999px;
+				padding: 0.18rem 0.58rem;
+				color: var(--accent-dark);
+				background: rgba(248, 243, 238, 0.66);
+				font-size: 0.75rem;
+				font-weight: 650;
+			}
+			.content-grid {
+				display: grid;
+				grid-template-columns: minmax(0, 7fr) minmax(280px, 5fr);
+				gap: clamp(2rem, 4.5vw, 4.5rem);
+				margin-top: clamp(2.8rem, 5.5vw, 5rem);
+				align-items: start;
+			}
+			.section {
+				scroll-margin-top: 7rem;
+			}
+			.section + .section {
+				margin-top: var(--section-gap);
+			}
+			.section-head {
+				display: flex;
+				align-items: end;
+				justify-content: space-between;
+				gap: 1rem;
+				margin-bottom: 1.1rem;
+			}
+			.section-head h2 {
+				margin: 0;
+			}
+			.more {
+				font-size: var(--text-meta);
+				font-weight: 700;
+				text-decoration: none;
+				color: var(--accent);
+			}
+			.more:hover {
+				color: var(--accent-dark);
+			}
+			.section-caption {
+				font-size: var(--text-caption);
+				color: rgb(var(--gray));
+				margin: -0.7rem 0 1.2rem;
+				font-family: var(--font-sans-zh);
+			}
+			.featured-card,
+			.post-link,
+			.side-card {
+				border: 1px solid var(--hairline);
+				background: rgba(255, 250, 246, 0.76);
+				box-shadow: 0 14px 34px rgba(79, 43, 24, 0.06);
+			}
+			.featured-card {
+				display: block;
+				text-decoration: none;
+				color: inherit;
+				border-radius: 24px;
+				padding: clamp(1.2rem, 2.7vw, 2rem);
+				transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms var(--ease-out);
+			}
+			.featured-card:hover,
+			.post-link:hover {
+				border-color: rgba(161, 74, 42, 0.34);
+				box-shadow: 0 20px 46px rgba(79, 43, 24, 0.12);
+				transform: translateY(-4px);
+			}
+			.featured-card h3 {
+				margin: 0.45rem 0 0;
+				font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+				letter-spacing: -0.035em;
+			}
+			.excerpt {
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-body);
+				color: rgb(var(--gray-dark));
+				line-height: 1.78;
+				margin: 0.78rem 0 0;
+			}
+			.post-list {
+				list-style: none;
+				margin: 1rem 0 0;
+				padding: 0;
+				display: grid;
+				gap: 0.78rem;
+			}
+			.post-link {
+				display: block;
+				text-decoration: none;
+				color: inherit;
+				border-radius: 18px;
+				padding: 1rem 1.05rem;
+				transition: transform 260ms var(--ease-out), box-shadow 260ms var(--ease-out), border-color 260ms var(--ease-out);
+			}
+			.post-link:hover h3,
+			.featured-card:hover h3 {
+				color: var(--accent-dark);
+			}
+			.post-link h3 {
+				margin: 0.32rem 0 0;
+				transition: color 220ms var(--ease-out);
+			}
+			.meta {
+				font-size: var(--text-meta);
+				color: rgb(var(--gray));
+				font-weight: 650;
+				display: flex;
+				flex-wrap: wrap;
 				gap: 0.45rem;
 				align-items: center;
+				line-height: 1.4;
 			}
-			.panel {
-				padding: 1.35rem 2rem 1.7rem;
+			.kicker {
+				color: var(--accent-dark);
+				font-size: var(--text-meta);
+				font-weight: 800;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
 			}
-			.panel:first-child {
-				border-right: 1px solid rgba(176, 74, 37, 0.12);
+			.sidebar {
+				position: sticky;
+				top: 5.5rem;
+				display: grid;
+				gap: 1rem;
 			}
-			.panel h2 {
-				font-size: 1.18rem;
-				margin-bottom: 0.35rem;
+			.side-card {
+				border-radius: 22px;
+				padding: 1.15rem;
 			}
-			.panel-caption {
-				font-size: 0.85rem;
-				color: rgb(var(--gray));
-				margin-bottom: 0.5rem;
+			.side-card h2,
+			.side-card h3 {
+				margin: 0 0 0.6rem;
 			}
-			.tracks {
+			.side-card h3 {
+				font-size: 1rem;
+			}
+			.now-list,
+			.track-list,
+			.track-nodes {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+			.now-list {
+				display: grid;
+				gap: 0.65rem;
+			}
+			.now-list li,
+			.track-desc {
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-excerpt);
+				line-height: 1.66;
+				color: rgb(var(--gray-dark));
+			}
+			.track-list {
+				display: grid;
+				gap: 1.05rem;
+			}
+			.track-nodes {
+				margin-top: 0.55rem;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.42rem;
+			}
+			.quote {
+				position: relative;
 				padding-left: 1rem;
-				margin: 0.6rem 0 0;
+				border-left: 3px solid var(--accent-warm);
+				font-family: var(--font-serif-zh);
+				font-size: 1rem;
+				line-height: 1.72;
+				color: rgb(var(--black));
 			}
-			.tracks li {
-				margin: 0.32rem 0;
+			.note {
+				margin-top: 1rem;
+				color: rgb(var(--gray));
+				font-size: var(--text-caption);
+				line-height: 1.65;
 			}
-			@media (max-width: 760px) {
-				.hero {
+			.note a {
+				color: var(--accent-dark);
+				text-decoration-color: rgba(161, 74, 42, 0.36);
+			}
+			.reveal {
+				animation: rise-in 620ms var(--ease-out) both;
+			}
+			.reveal:nth-child(2) {
+				animation-delay: 90ms;
+			}
+			@keyframes rise-in {
+				from {
+					opacity: 0;
+					transform: translateY(16px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			@keyframes blink {
+				50% {
+					opacity: 0;
+				}
+			}
+			@media (max-width: 900px) {
+				.hero-lab,
+				.content-grid {
 					grid-template-columns: 1fr;
-					padding: 1.4rem 1.2rem 1.1rem;
 				}
-				.sections {
+				.hero-lab {
+					min-height: auto;
+				}
+				.sidebar {
+					position: static;
+				}
+			}
+			@media (max-width: 560px) {
+				.home-main {
+					width: min(100% - 1.2rem, var(--home-width));
+					padding-top: 1.8rem;
+				}
+				.hero-visual,
+				.featured-card,
+				.side-card {
+					border-radius: 18px;
+				}
+				.system-loop {
 					grid-template-columns: 1fr;
 				}
-				.panel {
-					padding: 1rem 1.2rem;
-				}
-				.panel:first-child {
-					border-right: none;
-					border-bottom: 1px solid rgba(176, 74, 37, 0.12);
-				}
-				.latest-item {
-					padding: 0.78rem 0.78rem;
-				}
-				.latest-title {
-					font-size: 1.05rem;
+				.section-head {
+					align-items: flex-start;
+					flex-direction: column;
 				}
 			}
 		</style>
 	</head>
 	<body>
 		<Header />
-		<main>
-			<section class="home-shell">
-				<div class="hero">
-					<div class="hero-copy">
-						<div class="kicker">thinking in public</div>
-						<h1>思维生产线</h1>
-						<p>
-							围绕 AI 时代的个人工作流、生产力与生产关系变化，持续发布中文长文与方法论复盘。
-						</p>
-						<p class="hero-meta">每篇文章都尽量回答一个真实问题，并给出可执行动作。</p>
-						<div class="quick-jump">
-							<a href={toInternalPath('/blog')}>读最新文章</a>
-							<a href={toInternalPath('/themes')}>按主题浏览</a>
-							<a href={toInternalPath('/now')}>查看最近进展</a>
-						</div>
-					</div>
-					<aside class="entry-card">
-						<h2>个人主页入口</h2>
-						<p>这里是写作阵地。如果你想看我更完整的项目与个人信息，可以访问主站。</p>
-						<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">
-							访问 shiml20.github.io →
-						</a>
-					</aside>
+		<main class="home-main">
+			<section class="hero-lab reveal" aria-labelledby="home-title">
+				<div class="hero-copy">
+					<p class="eyebrow">Workflow Operating System</p>
+					<h1 class="hero-title" id="home-title">
+						<span>思维</span>
+						<span>生产线</span>
+					</h1>
+					<p class="lead">
+						AI 时代的个人工作流、认知结构与生产关系实验。这里持续记录如何与 AI
+						协同思考，如何构建长期复利工具，如何重组个人生产系统。
+					</p>
+					<ul class="hero-points" aria-label="站点持续记录的主题">
+						<li>如何把零散输入变成可复用的思考结构</li>
+						<li>如何让工具链服务长期质量，而不是只追求速度</li>
+						<li>如何在新生产力条件下重新理解个人与组织</li>
+					</ul>
+					<nav class="chips" aria-label="快捷入口">
+						<a href={toInternalPath('/blog')}>读最新文章</a>
+						<a href={toInternalPath('/themes')}>进入思维地图</a>
+						<a href={toInternalPath('/now')}>查看 Now</a>
+					</nav>
 				</div>
-				<div class="sections">
-					<section class="panel">
-						<h2>最新文章</h2>
-						<p class="panel-caption">从最近的思考开始读。</p>
-						<div class="latest-grid">
+
+				<aside class="hero-visual" aria-label="思想操作系统示意图">
+					<div class="visual-inner">
+						<div class="terminal-line">
+							<span>system://thinking-line</span>
+							<span class="cursor" aria-hidden="true"></span>
+						</div>
+						<div class="system-loop">
 							{
-								latestPosts.map((post) => (
-									<article class="latest-item">
-										<a href={toInternalPath(`/blog/${post.id}/`)}>
-											<div class="latest-meta">
-												<FormattedDate date={post.data.pubDate} />
-												{post.data.series && <span>· {post.data.series}</span>}
-											</div>
-											<h3 class="latest-title">{post.data.title}</h3>
-											<p class="latest-desc">{post.data.description}</p>
-										</a>
-									</article>
+								loopSteps.map((step, index) => (
+									<div class="system-step" data-index={`0${index + 1}`}>
+										{step}
+									</div>
 								))
 							}
 						</div>
-					</section>
-					<section class="panel">
-						<h2>写作主线</h2>
-						<p class="panel-caption">我在持续追踪的三个问题。</p>
-						<ul class="tracks">
-							<li>AI 时代个人工作流设计</li>
-							<li>生产力工具的长期复利效应</li>
-							<li>个体与组织生产关系变化</li>
+						<div class="keywords" aria-label="关键词">
+							{keywords.map((keyword) => <span class="tag">{keyword}</span>)}
+						</div>
+					</div>
+				</aside>
+			</section>
+
+			<div class="content-grid reveal">
+				<div class="primary-column">
+					<section class="section" aria-labelledby="latest-heading">
+						<div class="section-head">
+							<div>
+								<p class="kicker">Publication Queue</p>
+								<h2 id="latest-heading">最新文章</h2>
+							</div>
+							<a class="more" href={toInternalPath('/blog')}>全部文章 →</a>
+						</div>
+						<p class="section-caption">从最近的思考开始读，带着类型、系列与关键词进入。</p>
+
+						{
+							featuredPost && (
+								<a class="featured-card" href={toInternalPath(`/blog/${featuredPost.id}/`)}>
+									<div class="meta">
+										<span>{getPostType(featuredPost)}</span>
+										<span>·</span>
+										<span>{estimateReadingMinutes(featuredPost.body)} min</span>
+										<span>·</span>
+										<FormattedDate date={featuredPost.data.pubDate} />
+										{featuredPost.data.series && <span>· {featuredPost.data.series}</span>}
+									</div>
+									<h3>{featuredPost.data.title}</h3>
+									<p class="excerpt">{featuredPost.data.description}</p>
+									<div class="keywords" aria-label="文章关键词">
+										{featuredPost.data.tags.map((tag) => (
+											<span class="tag">#{tag}</span>
+										))}
+									</div>
+								</a>
+							)
+						}
+
+						<ul class="post-list">
+							{
+								supportingPosts.map((post) => (
+									<li>
+										<a class="post-link" href={toInternalPath(`/blog/${post.id}/`)}>
+											<div class="meta">
+												<span>{getPostType(post)}</span>
+												<span>·</span>
+												<span>{estimateReadingMinutes(post.body)} min</span>
+												<span>·</span>
+												<FormattedDate date={post.data.pubDate} />
+												{post.data.series && <span>· {post.data.series}</span>}
+											</div>
+											<h3>{post.data.title}</h3>
+										</a>
+									</li>
+								))
+							}
 						</ul>
 					</section>
 				</div>
-			</section>
+
+				<aside class="sidebar" aria-label="站点状态与主题地图">
+					<section class="side-card" aria-labelledby="now-heading">
+						<p class="kicker">Now</p>
+						<h2 id="now-heading">当前状态</h2>
+						<ul class="now-list">
+							{nowItems.map((item) => <li>{item}</li>)}
+						</ul>
+					</section>
+
+					<section class="side-card" aria-labelledby="tracks-heading">
+						<p class="kicker">Mind Map</p>
+						<h2 id="tracks-heading">思维主题</h2>
+						<ul class="track-list">
+							{
+								tracks.map((track) => (
+									<li>
+										<h3>{track.label}</h3>
+										<p class="track-desc">{track.desc}</p>
+										<ul class="track-nodes">
+											{track.nodes.map((node) => (
+												<li class="tag">{node}</li>
+											))}
+										</ul>
+									</li>
+								))
+							}
+						</ul>
+					</section>
+
+					<section class="side-card" aria-labelledby="lab-heading">
+						<p class="kicker">Lab Note</p>
+						<h2 id="lab-heading">写作姿态</h2>
+						<p class="quote">
+							不是把工具清单堆得更长，而是把输入、判断、表达和反馈接成一个可持续迭代的系统。
+						</p>
+						<p class="note">
+							这里是写作阵地。更完整的项目与个人信息在
+							<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">主站</a>。
+						</p>
+					</section>
+				</aside>
+			</div>
 		</main>
 		<Footer />
 	</body>

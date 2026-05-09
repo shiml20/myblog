@@ -1,28 +1,72 @@
 ---
 const today = new Date();
-import { SITE_MAIN_URL } from '../consts';
+import { SITE_MAIN_URL, toInternalPath } from '../consts';
 ---
 
 <footer>
-	<p>&copy; {today.getFullYear()} 思维生产线</p>
-	<p>持续记录 AI 时代个人工作流实验与思考。</p>
-	<p>
-		主站：<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">shiml20.github.io</a>
-	</p>
+	<div class="footer-inner">
+		<div class="brand">
+			<p class="name">思维生产线</p>
+			<p>Researching human-AI workflows since {today.getFullYear()}.</p>
+		</div>
+		<div>
+			<p class="label">Topics</p>
+			<p>Workflow / AI / Systems / Knowledge</p>
+		</div>
+		<div>
+			<p class="label">Elsewhere</p>
+			<p>
+				<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">Main Site</a>
+				<span>/</span>
+				<a href={toInternalPath('/rss.xml')}>RSS</a>
+			</p>
+		</div>
+	</div>
 </footer>
 <style>
 	footer {
-		padding: 2em 1em 6em 1em;
+		padding: 2.8em 1em 6em;
 		background: transparent;
 		color: rgb(var(--gray));
-		text-align: center;
-		border-top: 1px solid rgba(176, 74, 37, 0.14);
+		border-top: 1px solid var(--hairline);
+		font-family: var(--font-sans-zh);
+	}
+	.footer-inner {
+		width: min(var(--home-width), 100%);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: minmax(0, 1.3fr) minmax(180px, 0.8fr) minmax(160px, 0.6fr);
+		gap: 1.5rem;
 	}
 	p {
 		margin: 0.2em 0;
+		font-size: var(--text-caption);
+		line-height: 1.65;
+	}
+	.name {
+		color: rgb(var(--black));
+		font-size: 1.1rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+	}
+	.label {
+		color: var(--accent-dark);
+		font-size: var(--text-meta);
+		font-weight: 800;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
 	}
 	a {
 		color: var(--accent-dark);
 		text-underline-offset: 0.2em;
+	}
+	span {
+		margin: 0 0.35rem;
+		color: rgba(var(--gray), 0.7);
+	}
+	@media (max-width: 720px) {
+		.footer-inner {
+			grid-template-columns: 1fr;
+		}
 	}
 </style>

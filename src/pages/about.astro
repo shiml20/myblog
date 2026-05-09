@@ -10,23 +10,35 @@ import { SITE_TITLE } from '../consts';
 	<head>
 		<BaseHead title={`关于 - ${SITE_TITLE}`} description="关于这个站点" />
 		<style>
-			.about-shell {
-				background: #fff;
-				border: 1px solid rgba(176, 74, 37, 0.18);
-				border-radius: 12px;
-				padding: 1.2rem 1.3rem;
-				box-shadow: var(--box-shadow);
+			/* Uses global heading scale. No font-size override on h1/h2/h3. */
+			.lead {
+				margin: 0.4rem 0 1.2rem;
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-body);
+				line-height: 1.85;
+				color: rgb(var(--gray-dark));
 			}
-			.about-lead {
-				font-size: 1.03rem;
-				line-height: 1.8;
+			.body p {
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-body);
+				line-height: 1.85;
+				color: rgb(var(--gray-dark));
+				margin: 0 0 1em;
 			}
-			.about-points {
-				padding-left: 1.1rem;
-				margin: 0.8rem 0 0;
+			.body h2 {
+				margin-top: var(--section-gap);
+				margin-bottom: 0.5rem;
+				font-family: var(--font-sans-zh);
 			}
-			.about-points li {
-				margin: 0.32rem 0;
+			.points {
+				padding-left: 1.2rem;
+				margin: 0;
+			}
+			.points li {
+				margin: 0.4rem 0;
+				font-family: var(--font-serif-zh);
+				font-size: var(--text-body);
+				line-height: 1.75;
 			}
 		</style>
 	</head>
@@ -34,20 +46,22 @@ import { SITE_TITLE } from '../consts';
 		<Header />
 		<main>
 			<h1>关于</h1>
-			<section class="about-shell">
-				<p class="about-lead">
-					这个站点主要记录我对 AI 时代个人工作方式变化的观察：哪些方法真正提高了思考质量，哪些只是短期效率幻觉。
-				</p>
+			<p class="lead">
+				这个站点主要记录我对 AI 时代个人工作方式变化的观察：哪些方法真正提高了思考质量，哪些只是短期效率幻觉。
+			</p>
+			<div class="body">
 				<p>
 					我会持续写中文长文，形式以可复用观点、结构化论证和实践复盘为主，并尽量提供可执行的思考框架。
 				</p>
-				<ul class="about-points">
+				<h2>写作约束</h2>
+				<ul class="points">
 					<li>重点关注个人工作流设计，而非工具清单堆砌</li>
 					<li>每篇文章至少给出一个可操作动作</li>
 					<li>围绕同一主题持续迭代，形成长期知识链</li>
 				</ul>
+				<h2>联系</h2>
 				<p>如果你也在关注类似问题，欢迎通过 GitHub issue 交流。</p>
-			</section>
+			</div>
 		</main>
 		<Footer />
 	</body>
