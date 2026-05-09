@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, toInternalPath } from '../consts';
 
 const posts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
@@ -46,9 +46,24 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 			.group li {
 				margin: 0.35rem 0;
 			}
+			.group a {
+				text-decoration: none;
+			}
+			.group a:hover {
+				text-decoration: underline;
+				text-underline-offset: 0.2em;
+			}
 			.count {
 				color: rgb(var(--gray));
 				font-size: 0.85em;
+			}
+			@media (max-width: 760px) {
+				main {
+					width: 100%;
+				}
+				.group {
+					padding: 0.92rem 1rem;
+				}
 			}
 		</style>
 	</head>
@@ -68,7 +83,7 @@ const tags = [...tagMap.entries()].sort((a, b) => b[1].length - a[1].length);
 							<ul>
 								{taggedPosts.map((post) => (
 									<li>
-										<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+										<a href={toInternalPath(`/blog/${post.id}/`)}>{post.data.title}</a>
 									</li>
 								))}
 							</ul>

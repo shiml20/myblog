@@ -2,8 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_MAIN_URL, SITE_TITLE, toInternalPath } from '../consts';
 
 const latestPosts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
@@ -16,64 +17,182 @@ const latestPosts = (await getCollection('blog'))
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
 		<style>
-			.hero {
-				margin-top: 1.5rem;
-				padding: 2.2rem;
+			.home-shell {
+				margin-top: 1.2rem;
 				border: 1px solid rgba(176, 74, 37, 0.2);
-				border-radius: 14px;
+				border-radius: 16px;
 				background: #fff;
 				box-shadow: var(--box-shadow);
+				overflow: hidden;
+			}
+			.hero {
+				display: grid;
+				grid-template-columns: 1.2fr 0.8fr;
+				gap: 1.4rem;
+				padding: 2rem 2rem 1.5rem;
+				border-bottom: 1px solid rgba(176, 74, 37, 0.15);
+			}
+			.kicker {
+				font-family: var(--font-sans-zh);
+				font-size: 0.74rem;
+				text-transform: uppercase;
+				letter-spacing: 0.18em;
+				color: var(--accent-dark);
+				margin-bottom: 0.8rem;
 			}
 			.hero h1 {
-				margin-bottom: 0.3em;
+				font-size: clamp(2rem, 5vw, 3.2rem);
+				line-height: 1.1;
+				margin: 0 0 0.5rem;
 			}
-			.hero p {
-				max-width: 40em;
+			.hero-copy {
+				font-family: var(--font-serif-zh);
+			}
+			.hero-copy p {
 				margin: 0;
+				max-width: 34em;
 			}
-			.cta-row {
+			.hero-meta {
+				margin-top: 1.1rem;
+				font-size: 0.82rem;
+				color: rgb(var(--gray));
+			}
+			.quick-jump {
+				margin-top: 1rem;
 				display: flex;
-				gap: 0.8rem;
 				flex-wrap: wrap;
-				margin-top: 1.4rem;
+				gap: 0.55rem;
 			}
-			.cta-row a {
-				display: inline-block;
-				padding: 0.45rem 0.9rem;
-				border-radius: 999px;
+			.quick-jump a {
+				font-family: var(--font-sans-zh);
+				font-size: 0.8rem;
 				text-decoration: none;
-				border: 1px solid rgba(176, 74, 37, 0.4);
+				color: var(--accent-dark);
+				padding: 0.18rem 0.56rem;
+				border-radius: 999px;
+				border: 1px solid rgba(176, 74, 37, 0.25);
+				background: rgba(176, 74, 37, 0.06);
 			}
-			.cta-row a.primary {
-				background: var(--accent);
-				border-color: var(--accent);
-				color: #fff;
+			.quick-jump a:hover {
+				background: rgba(176, 74, 37, 0.14);
 			}
-			.grid {
-				margin-top: 1.8rem;
+			.entry-card {
+				align-self: end;
+				background: rgba(176, 74, 37, 0.04);
+				border: 1px solid rgba(176, 74, 37, 0.22);
+				border-radius: 12px;
+				padding: 1rem 1rem 0.95rem;
+			}
+			.entry-card h2 {
+				font-size: 0.95rem;
+				margin-bottom: 0.25rem;
+			}
+			.entry-card p {
+				margin: 0;
+				font-size: 0.88rem;
+				line-height: 1.6;
+			}
+			.entry-card a {
+				font-family: var(--font-sans-zh);
+				font-size: 0.82rem;
+				text-decoration: none;
+				display: inline-block;
+				margin-top: 0.55rem;
+			}
+			.entry-card a:hover {
+				color: var(--accent-dark);
+			}
+			.sections {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
-				gap: 1rem;
+				gap: 0;
+			}
+			.latest-grid {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 0.9rem;
+				margin-top: 0.7rem;
+			}
+			.latest-item {
+				border: 1px solid rgba(176, 74, 37, 0.16);
+				border-radius: 10px;
+				padding: 0.8rem 0.9rem;
+				background: rgba(248, 246, 242, 0.6);
+			}
+			.latest-item a {
+				text-decoration: none;
+				color: inherit;
+				display: block;
+			}
+			.latest-item:hover {
+				background: rgba(176, 74, 37, 0.06);
+				transition: background-color 220ms var(--ease-out);
+			}
+			.latest-title {
+				font-size: 1.15rem;
+				font-family: var(--font-sans-zh);
+				line-height: 1.35;
+				margin: 0.2rem 0 0.08rem;
+			}
+			.latest-desc {
+				font-size: 0.9rem;
+				color: rgb(var(--gray-dark));
+				line-height: 1.55;
+				margin: 0.28rem 0 0;
+				display: -webkit-box;
+				-webkit-line-clamp: 2;
+				-webkit-box-orient: vertical;
+				overflow: hidden;
+			}
+			.latest-meta {
+				font-size: 0.78rem;
+				color: rgb(var(--gray));
+				display: flex;
+				gap: 0.45rem;
+				align-items: center;
 			}
 			.panel {
-				background: #fff;
-				border-radius: 12px;
-				border: 1px solid rgba(176, 74, 37, 0.16);
-				padding: 1rem 1.1rem;
+				padding: 1.35rem 2rem 1.7rem;
+			}
+			.panel:first-child {
+				border-right: 1px solid rgba(176, 74, 37, 0.12);
 			}
 			.panel h2 {
-				font-size: 1.2rem;
+				font-size: 1.18rem;
+				margin-bottom: 0.35rem;
 			}
-			.panel ul {
+			.panel-caption {
+				font-size: 0.85rem;
+				color: rgb(var(--gray));
+				margin-bottom: 0.5rem;
+			}
+			.tracks {
 				padding-left: 1rem;
 				margin: 0.6rem 0 0;
 			}
-			.panel li {
-				margin: 0.3rem 0;
+			.tracks li {
+				margin: 0.32rem 0;
 			}
 			@media (max-width: 760px) {
-				.grid {
+				.hero {
 					grid-template-columns: 1fr;
+					padding: 1.4rem 1.2rem 1.1rem;
+				}
+				.sections {
+					grid-template-columns: 1fr;
+				}
+				.panel {
+					padding: 1rem 1.2rem;
+				}
+				.panel:first-child {
+					border-right: none;
+					border-bottom: 1px solid rgba(176, 74, 37, 0.12);
+				}
+				.latest-item {
+					padding: 0.78rem 0.78rem;
+				}
+				.latest-title {
+					font-size: 1.05rem;
 				}
 			}
 		</style>
@@ -81,37 +200,60 @@ const latestPosts = (await getCollection('blog'))
 	<body>
 		<Header />
 		<main>
-			<section class="hero">
-				<h1>思维生产线</h1>
-				<p>
-					这是一个中文长文优先的个人实验博客，用来持续沉淀我对 AI 时代个人工作流、生产力以及生产关系演化的观察与判断。
-				</p>
-				<div class="cta-row">
-					<a class="primary" href="/blog/style-showcase/">查看风格展示</a>
-					<a href="/blog/">浏览全部文章</a>
+			<section class="home-shell">
+				<div class="hero">
+					<div class="hero-copy">
+						<div class="kicker">thinking in public</div>
+						<h1>思维生产线</h1>
+						<p>
+							围绕 AI 时代的个人工作流、生产力与生产关系变化，持续发布中文长文与方法论复盘。
+						</p>
+						<p class="hero-meta">每篇文章都尽量回答一个真实问题，并给出可执行动作。</p>
+						<div class="quick-jump">
+							<a href={toInternalPath('/blog')}>读最新文章</a>
+							<a href={toInternalPath('/themes')}>按主题浏览</a>
+							<a href={toInternalPath('/now')}>查看最近进展</a>
+						</div>
+					</div>
+					<aside class="entry-card">
+						<h2>个人主页入口</h2>
+						<p>这里是写作阵地。如果你想看我更完整的项目与个人信息，可以访问主站。</p>
+						<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">
+							访问 shiml20.github.io →
+						</a>
+					</aside>
 				</div>
-			</section>
-			<section class="grid">
-				<section class="panel">
-					<h2>最新文章</h2>
-					<ul>
-						{
-							latestPosts.map((post) => (
-								<li>
-									<a href={`/blog/${post.id}/`}>{post.data.title}</a>
-								</li>
-							))
-						}
-					</ul>
-				</section>
-				<section class="panel">
-					<h2>写作主线</h2>
-					<ul>
-						<li>AI 时代个人工作流设计</li>
-						<li>生产力工具的长期复利效应</li>
-						<li>个体与组织生产关系变化</li>
-					</ul>
-				</section>
+				<div class="sections">
+					<section class="panel">
+						<h2>最新文章</h2>
+						<p class="panel-caption">从最近的思考开始读。</p>
+						<div class="latest-grid">
+							{
+								latestPosts.map((post) => (
+									<article class="latest-item">
+										<a href={toInternalPath(`/blog/${post.id}/`)}>
+											<div class="latest-meta">
+												<FormattedDate date={post.data.pubDate} />
+												{post.data.series && <span>· {post.data.series}</span>}
+											</div>
+											<h3 class="latest-title">{post.data.title}</h3>
+											<p class="latest-desc">{post.data.description}</p>
+										</a>
+									</article>
+								))
+							}
+						</div>
+					</section>
+					<section class="panel">
+						<h2>写作主线</h2>
+						<p class="panel-caption">我在持续追踪的三个问题。</p>
+						<ul class="tracks">
+							<li>AI 时代个人工作流设计</li>
+							<li>生产力工具的长期复利效应</li>
+							<li>个体与组织生产关系变化</li>
+						</ul>
+					</section>
+				</div>
 			</section>
 		</main>
 		<Footer />

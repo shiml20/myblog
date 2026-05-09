@@ -9,18 +9,40 @@ import { SITE_TITLE } from '../consts';
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={`Now - ${SITE_TITLE}`} description="当前在做什么" />
+		<style>
+			.now-shell {
+				background: #fff;
+				border: 1px solid rgba(176, 74, 37, 0.18);
+				border-radius: 12px;
+				padding: 1.2rem 1.3rem;
+				box-shadow: var(--box-shadow);
+			}
+			.now-list {
+				padding-left: 1.1rem;
+				margin: 0.75rem 0 1rem;
+			}
+			.now-list li {
+				margin: 0.36rem 0;
+			}
+			.updated {
+				font-size: 0.86rem;
+				color: rgb(var(--gray));
+			}
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
 			<h1>Now</h1>
-			<p>这个页面用于记录我当前在推进的事情，会不定期更新。</p>
-			<ul>
-				<li>优化个人写作工作流：从灵感采集到周更长文发布。</li>
-				<li>持续观察 AI 对知识工作分工方式的影响。</li>
-				<li>打磨“可复用思考模板”，提升表达效率与深度。</li>
-			</ul>
-			<p>更新时间：2026-05-09</p>
+			<section class="now-shell">
+				<p>这个页面用于记录我当前在推进的事情，会不定期更新。</p>
+				<ul class="now-list">
+					<li>优化个人写作工作流，从灵感采集到周更长文发布。</li>
+					<li>持续观察 AI 对知识工作分工方式的影响。</li>
+					<li>打磨“可复用思考模板”，提升表达效率与深度。</li>
+				</ul>
+				<p class="updated">更新时间：2026-05-09</p>
+			</section>
 		</main>
 		<Footer />
 	</body>

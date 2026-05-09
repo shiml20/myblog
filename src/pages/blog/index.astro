@@ -4,7 +4,7 @@ import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { SITE_DESCRIPTION, SITE_TITLE, toInternalPath } from '../../consts';
 
 const posts = (await getCollection('blog'))
 	.filter((post) => !post.data.draft)
@@ -25,6 +25,7 @@ const posts = (await getCollection('blog'))
 			.intro {
 				margin-bottom: 2rem;
 				color: rgb(var(--gray));
+				font-size: 1rem;
 			}
 			.post-list {
 				display: flex;
@@ -45,23 +46,26 @@ const posts = (await getCollection('blog'))
 			.post-item:hover {
 				box-shadow: var(--box-shadow);
 				transform: translateY(-1px);
-				transition: all 0.2s ease;
+				transition: box-shadow 220ms var(--ease-out), transform 220ms var(--ease-out);
 			}
 			.meta {
 				display: flex;
 				gap: 0.7rem;
 				align-items: center;
-				font-size: 0.84em;
+				font-size: 0.75rem;
 				color: rgb(var(--gray));
 				margin-bottom: 0.3rem;
 			}
 			.title {
-				margin-bottom: 0.2rem;
+				font-size: 1.5rem;
+				line-height: 1.35;
+				margin-bottom: 0.28rem;
 			}
 			.desc {
 				margin: 0;
 				color: rgb(var(--gray-dark));
-				font-size: 0.95em;
+				font-size: 1rem;
+				line-height: 1.65;
 			}
 			.tags {
 				margin-top: 0.8rem;
@@ -70,7 +74,7 @@ const posts = (await getCollection('blog'))
 				gap: 0.4rem;
 			}
 			.tag {
-				font-size: 0.76em;
+				font-size: 0.75rem;
 				padding: 0.12rem 0.5rem;
 				border-radius: 999px;
 				border: 1px solid rgba(176, 74, 37, 0.35);
@@ -78,7 +82,18 @@ const posts = (await getCollection('blog'))
 			}
 			.count {
 				color: rgb(var(--gray));
-				font-size: 0.9em;
+				font-size: 1rem;
+			}
+			@media (max-width: 760px) {
+				main {
+					width: 100%;
+				}
+				.post-item {
+					padding: 1rem;
+				}
+				.title {
+					font-size: 1.25rem;
+				}
 			}
 		</style>
 	</head>
@@ -92,7 +107,7 @@ const posts = (await getCollection('blog'))
 					{
 						posts.map((post) => (
 							<article class="post-item">
-								<a href={`/blog/${post.id}/`}>
+								<a href={toInternalPath(`/blog/${post.id}/`)}>
 									<div class="meta">
 										<FormattedDate date={post.data.pubDate} />
 										{post.data.series && <span>· {post.data.series}</span>}

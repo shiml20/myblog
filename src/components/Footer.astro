@@ -1,10 +1,14 @@
 ---
 const today = new Date();
+import { SITE_MAIN_URL } from '../consts';
 ---
 
 <footer>
 	<p>&copy; {today.getFullYear()} 思维生产线</p>
 	<p>持续记录 AI 时代个人工作流实验与思考。</p>
+	<p>
+		主站：<a href={SITE_MAIN_URL} target="_blank" rel="noopener noreferrer">shiml20.github.io</a>
+	</p>
 </footer>
 <style>
 	footer {
@@ -16,5 +20,9 @@ const today = new Date();
 	}
 	p {
 		margin: 0.2em 0;
+	}
+	a {
+		color: var(--accent-dark);
+		text-underline-offset: 0.2em;
 	}
 </style>

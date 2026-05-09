@@ -3,12 +3,15 @@
 :root {
 	--accent: #b04a25;
 	--accent-dark: #813317;
+	--accent-soft: rgba(176, 74, 37, 0.1);
 	--black: 26, 27, 29;
 	--gray: 98, 102, 109;
 	--gray-light: 233, 231, 228;
 	--gray-dark: 47, 50, 54;
 	--paper: #f8f6f2;
+	--surface: #fff;
 	--box-shadow: 0 10px 30px rgba(40, 30, 10, 0.08);
+	--ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 	--font-serif-zh:
 		'Source Han Serif SC', 'Noto Serif SC', 'Songti SC', 'STSong',
 		'PMingLiU', serif;
@@ -34,7 +37,7 @@ body {
 	text-rendering: optimizeLegibility;
 }
 main {
-	width: 720px;
+	width: 760px;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
@@ -74,9 +77,19 @@ b {
 a {
 	color: var(--accent);
 	text-underline-offset: 0.2em;
+	text-decoration-thickness: 1px;
+	transition: color 220ms var(--ease-out), background-color 220ms var(--ease-out);
 }
 a:hover {
 	color: var(--accent-dark);
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+	outline: 2px solid rgba(176, 74, 37, 0.6);
+	outline-offset: 2px;
+	border-radius: 6px;
 }
 p {
 	margin-bottom: 1em;
@@ -88,6 +101,13 @@ p {
 .prose h2,
 .prose h3 {
 	margin-top: 2.2em;
+}
+.prose a {
+	text-decoration: underline;
+	text-decoration-color: rgba(176, 74, 37, 0.45);
+}
+.prose a:hover {
+	text-decoration-color: var(--accent-dark);
 }
 textarea {
 	width: 100%;
@@ -130,11 +150,16 @@ pre > code {
 	overflow-x: auto;
 }
 blockquote {
-	border-left: 3px solid var(--accent);
-	padding: 0 0 0 20px;
-	margin: 0;
+	border: 1px solid rgba(176, 74, 37, 0.2);
+	border-radius: 10px;
+	background: var(--surface);
+	padding: 0.8em 1em;
+	margin: 1.6em 0;
 	font-size: 1.1em;
 	color: rgb(var(--gray-dark));
+}
+blockquote p:last-child {
+	margin-bottom: 0;
 }
 hr {
 	border: none;
@@ -147,6 +172,15 @@ hr {
 	}
 	main {
 		padding: 1em;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
 	}
 }
 

@@ -1,17 +1,18 @@
 ---
 import { SITE_TITLE } from '../consts';
+import { toInternalPath } from '../consts';
 import HeaderLink from './HeaderLink.astro';
 ---
 
 <header>
-	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+	<nav aria-label="主导航">
+		<h2><a href={toInternalPath()}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/blog">文章</HeaderLink>
-			<HeaderLink href="/themes">主题</HeaderLink>
-			<HeaderLink href="/now">Now</HeaderLink>
-			<HeaderLink href="/about">关于</HeaderLink>
+			<HeaderLink href={toInternalPath()}>首页</HeaderLink>
+			<HeaderLink href={toInternalPath('/blog')}>文章</HeaderLink>
+			<HeaderLink href={toInternalPath('/themes')}>主题</HeaderLink>
+			<HeaderLink href={toInternalPath('/now')}>Now</HeaderLink>
+			<HeaderLink href={toInternalPath('/about')}>关于</HeaderLink>
 		</div>
 	</nav>
 </header>
@@ -40,6 +41,8 @@ import HeaderLink from './HeaderLink.astro';
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
+		width: min(960px, 100%);
+		margin: 0 auto;
 	}
 	.internal-links {
 		display: flex;
@@ -49,15 +52,22 @@ import HeaderLink from './HeaderLink.astro';
 	}
 	nav a {
 		padding: 1em 0.5em;
-		color: var(--black);
+		color: rgb(var(--black));
 		border-bottom: 2px solid transparent;
 		text-decoration: none;
+		transition: border-color 220ms var(--ease-out), color 220ms var(--ease-out);
+	}
+	nav a:hover {
+		color: var(--accent-dark);
 	}
 	nav a.active {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
 	@media (max-width: 720px) {
+		header {
+			padding: 0 0.65em;
+		}
 		nav {
 			flex-wrap: wrap;
 			justify-content: center;
