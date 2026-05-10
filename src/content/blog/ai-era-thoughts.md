@@ -3,6 +3,8 @@ title: 'AI 时代的思考方式'
 description: ''
 pubDate: 'May 10, 2026'
 heroImage: '../../assets/blog-placeholder-2.jpg'
+tags:
+  - AI 与人的共生关系
 ---
 我认为 AI 时代的思考方式首先要建立几条共识：
 
