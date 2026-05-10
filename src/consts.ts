@@ -8,6 +8,9 @@ export const SITE_DESCRIPTION =
 	'记录 AI 时代个人工作流、心流状态与生产关系的长期写作与实践。';
 export const SITE_MAIN_URL = 'https://shiml20.github.io/';
 
+/** 更换 `public/favicon.svg` 时递增，避免浏览器长期缓存旧图标 */
+export const FAVICON_VERSION = '2';
+
 const baseUrl = import.meta.env.BASE_URL ?? '/';
 
 export function toInternalPath(path = '/'): string {
