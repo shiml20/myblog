@@ -6,7 +6,16 @@ import HeaderLink from './HeaderLink.astro';
 <header>
 	<nav aria-label="主导航">
 		<h2>
-			<a href={toInternalPath()} data-astro-prefetch="viewport" title={SITE_TITLE} lang="en">{SITE_HEADER_MARK}</a>
+			<a
+				href={toInternalPath()}
+				class="site-logo"
+				data-astro-prefetch="viewport"
+				title={`${SITE_HEADER_MARK} · ${SITE_TITLE}`}
+				lang="en"
+				aria-label={`${SITE_HEADER_MARK} · ${SITE_TITLE}，回到首页`}
+			>
+				<span class="site-logo-wordmark">{SITE_HEADER_MARK}</span>
+			</a>
 		</h2>
 		<div class="internal-links">
 			<HeaderLink href={toInternalPath()}>首页</HeaderLink>
@@ -31,13 +40,38 @@ import HeaderLink from './HeaderLink.astro';
 	h2 {
 		margin: 0;
 		font-size: 1em;
+		line-height: 1;
 	}
 
-	h2 a,
-	h2 a.active {
+	.site-logo {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
 		text-decoration: none;
-		letter-spacing: 0.04em;
+		padding: 0.45rem 0;
+		border-radius: 10px;
+	}
+	.site-logo-wordmark {
+		font-family:
+			ui-sans-serif,
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			sans-serif;
+		font-size: clamp(0.94rem, 1.15vw, 1.05rem);
 		font-weight: 700;
+		letter-spacing: 0.04em;
+		color: rgb(var(--black));
+		line-height: 1.2;
+		transition: color 200ms var(--ease-out);
+	}
+	.site-logo:hover .site-logo-wordmark,
+	.site-logo:focus-visible .site-logo-wordmark {
+		color: var(--accent-dark);
+	}
+	.site-logo:focus-visible {
+		outline: 2px solid rgba(161, 74, 42, 0.45);
+		outline-offset: 3px;
 	}
 	nav {
 		display: flex;
@@ -53,7 +87,7 @@ import HeaderLink from './HeaderLink.astro';
 		gap: 0.2rem;
 		flex-wrap: wrap;
 	}
-	nav a {
+	.internal-links a {
 		padding: 1em 0.5em;
 		color: rgb(var(--black));
 		border-bottom: 2px solid transparent;
@@ -63,10 +97,10 @@ import HeaderLink from './HeaderLink.astro';
 		font-weight: 700;
 		transition: border-color 220ms var(--ease-out), color 220ms var(--ease-out);
 	}
-	nav a:hover {
+	.internal-links a:hover {
 		color: var(--accent-dark);
 	}
-	nav a.active {
+	.internal-links a.active {
 		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
